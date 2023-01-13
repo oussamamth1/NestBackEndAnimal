@@ -13,82 +13,82 @@ import { taskstutus } from './task-status-enum';
 import { User } from 'src/users/models/entities/user.entity';
 @Injectable({ scope: Scope.REQUEST })
 export class TaskService {
-  //   constructor(
-  //     @InjectRepository(Task)
-  //     private taskReposeitory: Repository<Task>,
-  //   ) {}
-  constructor(
-    @InjectRepository(TaskRepository) private taskReposeitory: Repository<Task>,
-    private TaskReposeitory: TaskRepository,
-    @Inject(REQUEST) private request: Request,
-  ) {}
-  async updatetaskStatus(id: number, status: taskstutus): Promise<Task> {
-    const task = await this.GetTaskWithId(id);
-    task.status = status;
-    task.save();
-    return task;
-  }
-  async getTasks(filterdto: GetTaskFilterDTo): Promise<Task[]> {
-    return await this.TaskReposeitory.getTasks(filterdto);
-  }
-  findAll(filterdto: GetTaskFilterDTo): Promise<Task[]> {
-    const result = this.taskReposeitory.find(filterdto);
-    // const t = this.request.user;
-    // // const result = this.TaskReposeitory.find({
-    // //   where: { user },
-    // //   relations:['user'],
-    // });
+    //   constructor(
+    //     @InjectRepository(Task)
+    //     private taskReposeitory: Repository<Task>,
+    //   ) {}
+    constructor(
+        @InjectRepository(TaskRepository) private taskReposeitory: Repository<Task>,
+        private TaskReposeitory: TaskRepository,
+        @Inject(REQUEST) private request: Request,
+    ) { }
+    async updatetaskStatus(id: number, status: taskstutus, user: User): Promise<Task> {
+        const task = await this.GetTaskWithId(id, user);
+        task.status = status;
+        task.save();
+        return task;
+    }
+    async getTasks(filterdto: GetTaskFilterDTo): Promise<Task[]> {
+        return await this.TaskReposeitory.getTasks(filterdto);
+    }
+    findAll(filterdto: GetTaskFilterDTo): Promise<Task[]> {
+        const result = this.taskReposeitory.find(filterdto);
+        // const t = this.request.user;
+        // // const result = this.TaskReposeitory.find({
+        // //   where: { user },
+        // //   relations:['user'],
+        // });
 
-    // const findwhereid = this.TaskReposeitory.createQueryBuilder('task')
-    //   .where('task.userId = :userId', { userId: user.id })
-    //   .getMany();
-    // console.log(this.request.user, 'result');
-    return result;
-  }
-  findAllRealation(filterdto: GetTaskFilterDTo, user: User): Promise<Task[]> {
-    // const result = this.taskReposeitory.find(filterdto);
-    // const t = this.request.user;
-    // // const result = this.TaskReposeitory.find({
-    // //   where: { user },
-    // //   relations:['user'],
-    // });
+        // const findwhereid = this.TaskReposeitory.createQueryBuilder('task')
+        //   .where('task.userId = :userId', { userId: user.id })
+        //   .getMany();
+        // console.log(this.request.user, 'result');
+        return result;
+    }
+    findAllRealation(filterdto: GetTaskFilterDTo, user: User): Promise<Task[]> {
+        // const result = this.taskReposeitory.find(filterdto);
+        // const t = this.request.user;
+        // // const result = this.TaskReposeitory.find({
+        // //   where: { user },
+        // //   relations:['user'],
+        // });
 
-    const findwhereid = this.TaskReposeitory.createQueryBuilder('task')
-      .where('task.userId = :userId', { userId: user.id })
-      .getMany();
-    console.log(this.request.user, 'result');
-    return findwhereid;
-  }
-  //   getAllTask(): Task[] {
-  //     return this.task;
-  //   }
-  //   private taskin: taskin[] = [];
-  //   getAlltask(): taskin[] {
-  //     return this.taskin;
-  //   }
-  //   getteskwithfilter(taskfilter: GetTaskFilterDTo): taskin[] {
-  //     const { status, search } = taskfilter;
-  //     let tasks = this.getAlltask();
-  //     if (status) {
-  //       tasks = tasks.filter((task) => task.status === status);
-  //     }
-  //     if (search) {
-  //       tasks = tasks.filter(
-  //         (task) =>
-  //           task.title.includes(search) || task.description.includes(search),
-  //       );
-  //     }
-  //     return tasks;
-  //   }
-  async delettask(id: number): Promise<void> {
-    const deletid = await this.taskReposeitory.delete(id);
+        const findwhereid = this.TaskReposeitory.createQueryBuilder('task')
+            .where('task.userId = :userId', { userId: user.id })
+            .getMany();
+        console.log(this.request.user, 'result');
+        return findwhereid;
+    }
+    //   getAllTask(): Task[] {
+    //     return this.task;
+    //   }
+    //   private taskin: taskin[] = [];
+    //   getAlltask(): taskin[] {
+    //     return this.taskin;
+    //   }
+    //   getteskwithfilter(taskfilter: GetTaskFilterDTo): taskin[] {
+    //     const { status, search } = taskfilter;
+    //     let tasks = this.getAlltask();
+    //     if (status) {
+    //       tasks = tasks.filter((task) => task.status === status);
+    //     }
+    //     if (search) {
+    //       tasks = tasks.filter(
+    //         (task) =>
+    //           task.title.includes(search) || task.description.includes(search),
+    //       );
+    //     }
+    //     return tasks;
+    //   }
+    async delettask(id: number, user: User): Promise<void> {
+        const deletid = await this.taskReposeitory.delete({id, userId: user.id});
     if (deletid.affected === 0) {
       throw new NotFoundException(`this task "${id}" not found`);
     }
     console.log(deletid.affected);
   }
-  async GetTaskWithId(id: number): Promise<Task> {
-    const found = await this.taskReposeitory.findOne(id);
+    async GetTaskWithId(id: number, user: User): Promise<Task> {
+        const found = await this.taskReposeitory.findOne({where:{ id,userId:user.id }});
     //         {
     //   where: { id: id },
     //         }

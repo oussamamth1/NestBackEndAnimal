@@ -27,7 +27,7 @@ export class Task extends BaseEntity {
   status: taskstutus;
   //  @Column({ name: 'creatorUserId' })
   //   creatorUser: User;
-  @ManyToOne((type) => User, (user) => user.taskes)
+  @ManyToOne((type) => User)
   user: User;
   //   @ManyToOne(() => User, (user) => user.id, { nullable: true })
   //   @JoinColumn({ name: 'creatorUserId' })

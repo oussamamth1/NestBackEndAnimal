@@ -22,10 +22,11 @@ import { User } from './users/models/entities/user.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
+      autoLoadEntities: true,
       //   entities: [__dirname +'dist/**/*.entity.ts'],
       synchronize: true,
 
-        // migrationsRun: true,
+      // migrationsRun: true,
       //   type: 'mysql',
       //   host: 'localhost',
       //   username: 'root',

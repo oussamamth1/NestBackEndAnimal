@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Task } from 'src/task/task-entity';
+import { use } from 'passport';
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -39,8 +40,10 @@ export class User extends BaseEntity {
   async validatePassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
   }
-  @ManyToOne((type) => Task, (taskes) => taskes.user, { cascade: false })
-  taskes: Task;
-  //   @Column()
-  //   task:Task;
+//   @ManyToOne((type) => Task, (taskes) => taskes.user, { cascade: false })
+//   taskes: Task;
+    // @Column()
+        
+    // taskes:Task;
 }
+export default User;

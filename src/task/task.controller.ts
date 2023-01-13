@@ -50,8 +50,11 @@ export class TaskController {
 
   // }
   @Get('/:id')
-  async gettaskid(@Param('id', ParseIntPipe) id: number): Promise<Task> {
-    return await this.taskserver.GetTaskWithId(id);
+  async gettaskid(
+    @Param('id', ParseIntPipe) id: number,
+    @User1() user: User,
+  ): Promise<Task> {
+    return await this.taskserver.GetTaskWithId(id, user);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -116,15 +119,19 @@ export class TaskController {
     return this.taskserver.createTask(createTaskdto, req.user);
   }
   @Delete('/:id')
-  deletTask(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.taskserver.delettask(id);
+  deletTask(
+    @Param('id', ParseIntPipe) id: number,
+    @User1() user: User,
+  ): Promise<void> {
+    return this.taskserver.delettask(id, user);
   }
   @Patch('/:id/status')
   updateTaskStatus(
     @Param('id', ParseIntPipe) id: number,
+    @User1() user: User,
     @Body('status', TaskStatusValidation) status: taskstutus,
   ): Promise<Task> {
-    return this.taskserver.updatetaskStatus(id, status);
+    return this.taskserver.updatetaskStatus(id, status, user);
   }
   @Get(':name/:designation')
   getalTask(
