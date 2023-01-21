@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   NotFoundException,
   Param,
   ParseIntPipe,
@@ -31,6 +32,7 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 @UseGuards(AuthGuard('jwt'))
 @Controller('task')
 export class TaskController {
+  private logger = new Logger('TaskController');
   constructor(
     private taskserver: TaskService,
     private authService: AuthService,
@@ -137,6 +139,7 @@ export class TaskController {
   getalTask(
     @Query(ValidationPipe) filterdto: GetTaskFilterDTo,
   ): Promise<Task[]> {
+
     return this.taskserver.getTasks(filterdto);
   }
   // @Get()
@@ -159,7 +162,12 @@ export class TaskController {
 
     @User1() user: User,
   ) {
-    console.log(user.id, 'userid');
+      console.log(user.id, 'userid');
+            this.logger.verbose(
+              `User "${user.id}" recive all tasks filters: ${JSON.stringify(
+                filterdto,
+              )}`,
+            );
     const Taskes = await this.taskserver.findAllRealation(filterdto, user);
 
     return Taskes;

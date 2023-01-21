@@ -1,4 +1,4 @@
-import { Injectable, Res, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, Res, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserLoginDto } from './models/dto/user-login.dto';
@@ -17,8 +17,9 @@ export class AuthService {
 
     const payload = {
       id: user.id,
-      username: user.email,
+      email: user.email,
       password: user.password,
+    
     };
 
     return {
@@ -39,13 +40,20 @@ export class AuthService {
   async validateUser(userLoginDto: UserLoginDto): Promise<any> {
     const { email, password } = userLoginDto;
     const user = await this.usersService.findUserByEmail(email);
-    console.log('user', user);
+      console.log('user', user);
+       const user1 = await this.usersService.findUserByEmail(
+         email
+       );
+       if (!user1) {
+         throw new BadRequestException('Invalid email');
+       }
     if (user) {
       const compare = await bcrypt.compare(password, user.password);
       if (compare) {
         const { password, ...result } = user;
         return result;
-      }
+        }
+       
     }
     return null;
   }
