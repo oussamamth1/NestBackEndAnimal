@@ -18,10 +18,10 @@ export class UsersController {
   }
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async getAllTaskesRelation(@User1() user: User) {
+  async getuseremail(@User1() user: User) {
     console.log(user, 'userid');
 
-    const Taskes = await this.taskserver.findUserByEmail1(user);
+    const Taskes = await this.taskserver.findUserByEmailtoken(user);
 
     return Taskes;
   }

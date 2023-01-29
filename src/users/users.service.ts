@@ -39,15 +39,14 @@ export class UsersService {
       },
     });
   }
- 
-    async findUserByEmail1(user: User) {
-      console.log(user.email);
+
+  async findUserByEmailtoken(user: User) {
+    console.log(user.email);
     return await User.findOne({
       where: {
         email: user.email,
       },
     });
-      
   }
   findAllRealation(user: User): Promise<User[]> {
     // const result = this.taskReposeitory.find(filterdto);

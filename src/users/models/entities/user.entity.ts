@@ -27,6 +27,14 @@ export class User extends BaseEntity {
   @Column()
   @CreateDateColumn()
   createdAt: Date;
+  @Column()
+  username: string;
+
+  //   @Column({ default: '' })
+  //   bio: string;
+
+  //   @Column({ default: '' })
+  //   image: string;
 
   @Column()
   @UpdateDateColumn()
@@ -40,10 +48,10 @@ export class User extends BaseEntity {
   async validatePassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
   }
-//   @ManyToOne((type) => Task, (taskes) => taskes.user, { cascade: false })
-//   taskes: Task;
-    // @Column()
-        
-    // taskes:Task;
+  //   @ManyToOne((type) => Task, (taskes) => taskes.user, { cascade: false })
+  //   taskes: Task;
+  // @Column()
+
+  // taskes:Task;
 }
 export default User;
